@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flora y Fauna de Querétaro</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    html { width: 100%; overflow-x: hidden; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f7f0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-top: 60px; 
+      width: 100%;
+    }
+    .navbar {
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 2rem; background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: 60px; box-sizing: border-box;
+    }
+    .logo {
+      display: flex; align-items: center; font-weight: bold; font-size: 1.5rem;
+      font-family: 'Playfair Display', serif; color: #8C5E2A;
+    }
+    .logo img { height: 50px; margin-right: 15px; }
+    
+    .links a { 
+      text-decoration: none; 
+      color: #333; 
+      font-weight: 500; 
+      margin-left: 20px; 
+      font-size: 0.95rem; 
+      transition: color 0.3s; 
+    }
+    .links a:hover { color: #8C5E2A; }
+  
+    .donaciones-link {
+        font-weight: 700 !important;
+        color: #8C5E2A !important;
+    }
+    .hero-landing {
+      background-image: url("{{ url_for('static', filename='img/inicio_real.jpg') }}"); 
+      background-size: cover; 
+      background-position: center; 
+      position: relative;
+      height: calc(100vh - 60px); 
+      color: white; 
+      display: flex; 
+      flex-direction: column;
+      justify-content: center; 
+      align-items: center; 
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    .hero-landing::before {
+        content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-content {
+      position: relative; 
+      z-index: 1; 
+      max-width: 800px;
+    }
+
+    .hero-content h1 {
+      margin: 0; 
+      font-family: 'Playfair Display', serif; 
+      font-size: 3.5rem; 
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+      margin-bottom: 20px;
+    }
+    
+    .hero-content span {
+        color: #ccb98f;
+        font-style: italic;
+    }
+
+    .hero-content p {
+      margin: 0 auto 30px auto; 
+      opacity: 0.95; 
+      font-weight: 400; 
+      font-size: 1.25rem; 
+      line-height: 1.6;
+      max-width: 600px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    .boton-explorar {
+        display: inline-block;
+        background-color: #8C5E2A; 
+        color: white; 
+        text-decoration: none;
+        padding: 15px 35px;
+        border-radius: 10px; 
+        font-weight: 600; 
+        font-size: 1.1rem;
+        transition: background 0.3s, transform 0.2s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    }
+    
+    .boton-explorar:hover { 
+        background-color: #6f4a20; 
+        transform: translateY(-2px);
+    }
+
+    .footer {
+      background-color: #31694E;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      text-align: left;
+      margin-top: auto; 
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .footer p {
+      margin: 0.2rem 0;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .siguenos-redes {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 0.5rem;
+    }
+
+    .instagram-icon {
+      height: 30px;
+      transition: opacity 0.3s;
+    }
+    .instagram-icon:hover {
+        opacity: 0.8;
+    }
+    @media (max-width: 768px) {
+        .hero-content h1 { font-size: 2.5rem; }
+        .navbar { padding: 0 1rem; }
+        .logo span { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logotipo">
+      <span>Fauna y Flora Local Qro</span>
+    </div>
+
+    <div class="links">
+      <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
+      <a href="{{ url_for('auth.registro') }}">Registrarse</a>
+      <a href="{{ url_for('donaciones') }}" class="donaciones-link">Donaciones</a>
+    </div>
+  </nav>
+
+
+  <header class="hero-landing">
+    <div class="hero-content">
+      <h1><span>Descubre</span> la naturaleza de Querétaro</h1>
+      <p>
+        Explora la diversidad de flora y fauna que habita entre sierras, zonas semidesérticas y bosques que forman la riqueza natural de nuestro estado.
+      </p>
+      <a href="{{ url_for('mapa') }}" class="boton-explorar">Explora ahora →</a>
+    </div>
+  </header>
+
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Flora y Fauna de Querétaro. Todos los derechos reservados.</p>
+      
+      <div class="siguenos-redes">
+        <p class="siguenos" style="margin:0;">Síguenos:</p>
+        <a href="https://www.instagram.com/bio_qro25?igsh=MTdoN2FlZTd1ZnE5bw==" target="_blank">
+          <img src="{{ url_for('static', filename='img/instagram.png') }}" alt="Instagram" class="instagram-icon">
+        </a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

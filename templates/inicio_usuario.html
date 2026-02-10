@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio Usuario | Flora y Fauna</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/inicio_usuario.css') }}" />
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    
+    <style>
+        :root {
+          --verde-oscuro: #1c3728;
+          --cafe: #8C5E2A;
+          --beige: #f8f7f0;
+        }
+    
+        .mapa-focus-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0; 
+            margin-bottom: 40px; 
+        }
+
+        .mapa-focus-button {
+            padding: 18px 50px;
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            letter-spacing: 1.5px; 
+            text-transform: uppercase;
+            background-color: var(--verde-oscuro); 
+            color: white; 
+            border: 4px solid var(--cafe); 
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.35);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .mapa-focus-button:hover {
+            background-color: #355e46; 
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px); 
+        }
+
+        .mapa-focus-button i {
+            margin-right: 15px;
+            font-size: 1.6rem;
+        }
+        
+      
+
+        .carousel-item img {
+            height: 400px; 
+            object-fit: cover; 
+            border-radius: 10px;
+            transition: transform 0.5s ease;
+            cursor: default;
+        }
+        .carousel-caption {
+            background-color: rgba(0, 0, 0, 0.75); 
+            border-radius: 0 0 10px 10px; 
+            padding: 18px 25px;
+            bottom: 0; 
+            top: auto;
+            text-align: left;
+            left: 0;
+            right: 0;
+            max-width: 100%;
+            margin: 0;
+        }
+        
+        .carousel-caption h5 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.0rem; 
+            margin-bottom: 3px;
+        }
+        
+        .carousel-caption p {
+             font-size: 1rem;
+             color: #ddd;
+             margin-bottom: 0;
+        }
+
+        #carouselExampleIndicators {
+            margin-bottom: 40px; 
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+            <span>Fauna y Flora Qro</span>
+        </div>
+        <div class="links">
+            <a href="/comentarios">Comentarios</a>
+            <a href="/consejos">Protege tu entorno</a>
+            <a href="/perfil">Mi Perfil</a>
+            <a href="/membresias" class="btn-logout">Membresías</a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        
+        <div class="header-section">
+            <h1 class="titulo-principal">Estadísticas de Especies</h1>
+            <p class="subtitulo">Resumen actual de la biodiversidad en nuestra plataforma</p>
+        </div>
+
+        <div class="mapa-focus-section">
+            <a href="/mapa-usuario" class="mapa-focus-button">
+                
+                <i class="fas fa-map-marked-alt"></i> EXPLORAR MAPA DE QUERÉTARO
+            </a>
+        </div>
+
+        <div class="grid-stats">
+            <div class="stat-card">
+                <i class="fas fa-leaf icono-stat"></i>
+                <h2 class="numero-stat">{{ stats['flora'] }}</h2>
+                <p class="label-stat">Flora Registrada</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-dove icono-stat"></i>
+                <h2 class="numero-stat">{{ stats['fauna'] }}</h2>
+                <p class="label-stat">Fauna Registrada</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-exclamation-triangle icono-stat alerta"></i>
+                <h2 class="numero-stat">{{ stats['vulnerables'] }}</h2>
+                <p class="label-stat">En Peligro</p>
+            </div>
+
+            <div class="stat-card">
+                <i class="fas fa-camera icono-stat"></i>
+                <h2 class="numero-stat">{{ fotos['fotografiadas'] }}</h2>
+                <p class="label-stat">Con Fotografías</p>
+            </div>
+        </div>
+
+        <hr class="separador">
+
+        <h2 class="titulo-seccion">Explora Zonas Naturales</h2>
+        
+        {% if zonas %}
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+            
+            <div class="carousel-indicators">
+                {% for zona in zonas %}
+                <button type="button" 
+                        data-bs-target="#carouselExampleIndicators" 
+                        data-bs-slide-to="{{ loop.index0 }}" 
+                        {% if loop.first %} class="active" aria-current="true" {% endif %}
+                        aria-label="Slide {{ loop.index }}">
+                </button>
+                {% endfor %}
+            </div>
+
+            <div class="carousel-inner" style="border-radius: 10px;">
+                {% for zona in zonas %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    
+                    <img src="{{ url_for('static', filename=zona.ruta) }}" class="d-block w-100" alt="Zona de {{ zona.nombre }}">
+                    
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>{{ zona.nombre }}</h5>
+                        <p>Descubre la biodiversidad y conservación de esta región.</p>
+                    </div>
+                    
+                </div>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+        {% else %}
+            <div class="no-data alert alert-info text-center">
+                <p>No hay zonas registradas en este momento.</p>
+            </div>
+        {% endif %}
+        <div class="info-box">
+            <h3 class="titulo-seccion">Sobre la Biodiversidad</h3>
+            <p>Querétaro representa una parte vital del ecosistema central de México. Conoce más sobre las especies endémicas y cómo ayudar a su conservación.</p>
+            
+            <div class="boton-wrapper" style="margin-top: 20px;">
+                <a href="https://biblioteca.semarnat.gob.mx/janium/Documentos/Ciga/libros2018/CD003341.pdf" target="_blank" class="boton-principal">
+                    Leer Documentación Oficial
+                </a>
+            </div>
+            
+        </div>
+
+    </div> 
+
+    <footer class="footer">
+        <div class="boton-wrapper" style="margin-bottom: 20px;">
+            <a href="/donaciones-usuario" class="boton-principal">
+                <i class="fas fa-heart"></i> Donar Ahora
+            </a>
+        </div>
+
+        <p>&copy; 2025 Flora y Fauna de Querétaro.</p>
+        <div class="social-icons">
+            <i class="fab fa-instagram"></i>
+            <i class="fab fa-facebook"></i>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>

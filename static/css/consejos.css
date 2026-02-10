@@ -1,0 +1,197 @@
+:root {
+    --verde-oliva: #4f665b;
+    --verde-suave: #8fa39a;
+    --cafe: #6b4a2b;
+    --cafe-claro: #9a7b60;
+    --crema: #f5f2ed;
+    --blanco: #ffffff;
+    --texto: #2e2a26;
+    --sombra: rgba(0,0,0,0.07);
+}
+
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--crema);
+    color: var(--texto);
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+.navbar { position: fixed; top: 0; left: 0; width: 100%; padding: 12px 25px; background: linear-gradient(to bottom, #ffffff, #f7f4ef); border-bottom: 2px solid #e5ddd2; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; }
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 45px;
+    width: auto;
+    display: block;
+}
+
+.logo span {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--cafe);
+    letter-spacing: 0.3px;
+    margin-left: 8px;
+}
+
+/* Botones minimalistas (solo texto) */
+.links {
+    margin-left: auto;
+    margin-right: 90px;
+    display: flex;
+    gap: 25px;
+}
+
+.links a {
+    text-decoration: none;
+    padding: 8px 0; /* solo un poco de padding vertical */
+    background: transparent;
+    color: var(--cafe);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    color: var(--verde-oliva);
+}
+
+/* ===== FONDO ===== */
+.fondo {
+    margin-top: 120px;
+    min-height: 100vh;
+    padding: 50px 20px;
+
+    background-image: 
+        linear-gradient(rgba(244,241,234,0.86), rgba(244,241,234,0.92)),
+        url("/static/img/fondo_bosque.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* ===== TITULO ===== */
+.contenido h1 {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    color: var(--cafe); /* color café */
+    margin-bottom: 45px;
+    letter-spacing: 1px;
+}
+/* ===== CONTENEDOR ===== */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+/* ===== TARJETAS ===== */
+.card {
+    background: var(--blanco);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+    border: 1px solid #e6ddd3;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.08);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+/* ===== HEADER TARJETA ===== */
+.card-header {
+    background: linear-gradient(to right, #f2ece4, #f8f4ef);
+    padding: 16px 22px;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--cafe);
+    font-family: 'Playfair Display', serif;
+}
+
+.zona {
+    display: block;
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--verde-oliva);
+}
+
+/* ===== CUERPO TARJETA ===== */
+.card-body {
+    padding: 20px 22px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #4a4a4a;
+}
+
+.card-body i {
+    color: var(--verde-oliva);
+}
+
+.meta {
+    margin-top: 10px;
+    font-size: 13px;
+    color: #777;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    margin-top: 70px;
+    background: linear-gradient(to right, #435f54, #2f453d);
+    color: white;
+    padding: 28px 20px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.footer p {
+    margin: 6px 0;
+}
+
+.instagram-icon {
+    width: 28px;
+    margin-top: 8px;
+    filter: brightness(0) invert(1);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .contenido h1 {
+        font-size: 30px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+        border-radius: 25px;
+    }
+
+    .links a {
+        font-size: 13px;
+        padding: 6px 14px;
+    }
+}
+
+

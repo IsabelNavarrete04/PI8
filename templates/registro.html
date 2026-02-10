@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | Flora y Fauna</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            --verde-bosque: #2E4635; --verde-oliva: #5C8065; --dorado: #E8B931;
+            --blanco: #FFFFFF; --header-bg: #FFFFFF; --header-text: #8C5E2A;
+            --footer-bg: #8C5E2A; --footer-text: #FFFFFF;
+        }
+
+        body {
+            margin: 0; padding: 0; min-height: 100vh;
+            font-family: 'Lato', sans-serif; overflow-x: hidden;
+            background-image: url('https://images.unsplash.com/photo-1500534623283-312aade485b7?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover; background-position: center; background-attachment: fixed;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        body::before {
+            content: ''; position: fixed; inset: 0;
+            background: rgba(46, 70, 53, 0.6); backdrop-filter: blur(3px); z-index: -1;
+        }
+
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; background-color: var(--header-bg);
+            color: var(--header-text); box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar .logo {
+            display: flex; align-items: center; font-weight: bold;
+            font-size: 1.2rem; font-family: 'Playfair Display', serif;
+        }
+        .navbar .logo img { height: 45px; margin-right: 10px; }
+        
+        .navbar .links { display: flex; gap: 12px; }
+        .navbar .links a {
+            color: var(--header-text); text-decoration: none; font-weight: bold;
+            padding: 8px 12px;
+        }
+
+        .main-container {
+            flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 60px 20px;
+        }
+
+        .login-card {
+            background-color: var(--blanco); padding: 40px 40px; border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center; width: 100%; max-width: 500px;
+        }
+
+        h2 { font-family: 'Playfair Display', serif; color: var(--verde-bosque); font-size: 2rem; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 0.95rem; margin-bottom: 30px; }
+        
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; font-size: 0.85rem; font-weight: bold; color: var(--verde-bosque); margin-bottom: 5px; }
+
+        .custom-input {
+            width: 100%; padding: 12px; border: 2px solid #E0E0E0;
+            border-radius: 10px; font-size: 1rem; background-color: #FAFAFA;
+        }
+        
+        .input-error { border-color: #dc3545 !important; background-color: #fff8f8; }
+
+        .btn-login {
+            width: 100%; padding: 16px; background-color: #8C5E2A; color: white;
+            border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; margin-top: 15px; transition: background 0.3s;
+        }
+        .btn-login:hover { background-color: #6d461d; }
+
+        .links { margin-top: 20px; font-size: 0.9rem; color: #777; }
+        .links a { color: var(--dorado); text-decoration: none; font-weight: bold; }
+        .footer {
+      background-color: #8C5E2A;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      text-align: left;
+      margin-top: auto;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .footer p {
+      margin: 0.2rem 0;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .siguenos-redes {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 0.5rem;
+    }
+
+    .instagram-icon {
+      height: 30px;
+    }
+
+
+    @media (max-width: 800px) {
+        .dashboard-wrapper { grid-template-columns: 1fr; gap: 30px; }
+        .panel-formulario { position: relative; top: 0; }
+        .comentarios-list { max-height: none; overflow-y: visible; }
+    }
+    </style>
+</head>
+
+<body>
+    <div id="flash-messages-container" style="display: none;">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div data-category="{{ category }}" data-message="{{ message }}"></div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+            <span>Fauna y Flora Local Qro</span>
+        </div>
+        <div class="links">
+            <a href="/">Inicio</a>
+            <a href="{{ url_for('auth.login') }}">Iniciar Sesión</a>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="login-card">
+            <h2>Crear Cuenta</h2>
+            <p class="subtitle">Únete a nuestra comunidad de observadores</p>
+
+            <form action="/registro" method="POST" id="formRegistro" novalidate>
+                
+                <div class="input-group">
+                    <label>Nombre(s)</label>
+                    <input type="text" name="nombre" id="nombre" class="custom-input" placeholder="Tu nombre">
+                </div>
+
+                <div class="input-group">
+                    <label>Apellido Paterno</label>
+                    <input type="text" name="ap_paterno" id="ap_paterno" class="custom-input" placeholder="Apellido paterno">
+                </div>
+
+                <div class="input-group">
+                    <label>Apellido Materno</label>
+                    <input type="text" name="ap_materno" id="ap_materno" class="custom-input" placeholder="Apellido materno">
+                </div>
+
+                <div class="input-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" name="correo" id="correo" class="custom-input" placeholder="ejemplo@correo.com">
+                </div>
+
+                <div class="input-group">
+                    <label>Contraseña</label>
+                    <input type="password" name="contraseña" id="contrasena" class="custom-input" placeholder="Mínimo 8 caracteres">
+                </div>
+
+                <button type="submit" class="btn-login">Registrarse</button>
+            </form>
+
+            <div class="links">
+                <p>¿Ya tienes cuenta? <a href="/login">Inicia Sesión</a></p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Flora y Fauna de Querétaro. Todos los derechos reservados.</p>
+      <div class="siguenos-redes">
+        <p class="siguenos" style="margin:0;">Síguenos:</p>
+        <a href="https://www.instagram.com/bio_qro25?igsh=MTdoN2FlZTd1ZnE5bw==" target="_blank">
+          <img src="{{ url_for('static', filename='img/instagram.png') }}" alt="Instagram" class="instagram-icon">
+        </a>
+      </div>
+    </div>
+  </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const flashContainer = document.getElementById('flash-messages-container');
+            if (flashContainer) {
+                const messages = flashContainer.querySelectorAll('div');
+                messages.forEach(msg => {
+                    const category = msg.dataset.category; 
+                    const text = msg.dataset.message;
+                    
+                    Swal.fire({
+                        title: category === 'success' ? '¡Bienvenido!' : 'Error',
+                        text: text,
+                        icon: category === 'success' ? 'success' : 'error',
+                        confirmButtonColor: '#8C5E2A'
+                    });
+                });
+            }
+            const form = document.getElementById('formRegistro');
+            form.addEventListener('submit', function(e) {
+                const nombre = document.getElementById('nombre');
+                const apPaterno = document.getElementById('ap_paterno');
+                const apMaterno = document.getElementById('ap_materno');
+                const correo = document.getElementById('correo');
+                const pass = document.getElementById('contrasena');
+                
+                let errores = [];
+                [nombre, apPaterno, apMaterno, correo, pass].forEach(input => input.classList.remove('input-error'));
+
+                //Solo letras y acentos
+                const textoRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+                //Email
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!nombre.value.trim()) {
+                    errores.push("El nombre es obligatorio.");
+                    nombre.classList.add('input-error');
+                } else if (!textoRegex.test(nombre.value)) {
+                    errores.push("El nombre solo debe contener letras.");
+                    nombre.classList.add('input-error');
+                }
+
+                if (!apPaterno.value.trim()) {
+                    errores.push("El apellido paterno es obligatorio.");
+                    apPaterno.classList.add('input-error');
+                } else if (!textoRegex.test(apPaterno.value)) {
+                    errores.push("El apellido paterno solo debe contener letras.");
+                    apPaterno.classList.add('input-error');
+                }
+                
+                if (apMaterno.value.trim() && !textoRegex.test(apMaterno.value)) {
+                    errores.push("El apellido materno solo debe contener letras.");
+                    apMaterno.classList.add('input-error');
+                }
+
+                if (!correo.value.trim()) {
+                    errores.push("El correo es obligatorio.");
+                    correo.classList.add('input-error');
+                } else if (!emailRegex.test(correo.value)) {
+                    errores.push("El formato del correo no es válido.");
+                    correo.classList.add('input-error');
+                }
+
+                if (!pass.value.trim()) {
+                    errores.push("La contraseña es obligatoria.");
+                    pass.classList.add('input-error');
+                } else if (pass.value.length < 8) {
+                    errores.push("La contraseña debe tener al menos 8 caracteres.");
+                    pass.classList.add('input-error');
+                }
+
+                if (errores.length > 0) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Datos incorrectos',
+                        html: errores.join('<br>'),
+                        confirmButtonColor: '#8C5E2A'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

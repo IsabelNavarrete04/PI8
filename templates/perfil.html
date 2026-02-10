@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil | Flora y Fauna Qro</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        html { width: 100%; overflow-x: hidden; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-top: 60px;
+            width: 100%;
+            color: #333;
+        }
+
+        .navbar {
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 2rem; background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); height: 60px; box-sizing: border-box;
+        }
+
+        .logo {
+            display: flex; align-items: center; font-weight: bold; font-size: 1.5rem;
+            font-family: 'Playfair Display', serif; color: #8C5E2A;
+        }
+
+        .logo img { height: 50px; margin-right: 15px; }
+
+        .links a {
+            text-decoration: none; color: #333; font-weight: 500; 
+            margin-left: 20px; font-size: 0.95rem; transition: color 0.3s;
+        }
+        .links a:hover { color: #8C5E2A; }
+
+        .page-header {
+            text-align: center;
+            padding: 40px 20px 10px;
+            background: transparent;
+        }
+
+        .page-header h1 { 
+            margin: 0; 
+            font-family: 'Playfair Display', serif; 
+            font-size: 3rem; 
+            color: #8C5E2A;
+        }
+        
+        .page-header p { 
+            margin: 10px 0 0; 
+            color: #666; 
+            font-size: 1.1rem; 
+        }
+
+        .dashboard-wrapper {
+            display: grid; 
+            grid-template-columns: 320px 1fr; 
+            gap: 40px;
+            max-width: 1200px; 
+            width: 100%; 
+            margin: 0 auto; 
+            padding: 20px 20px 40px;
+            box-sizing: border-box; 
+            align-items: start;
+        }
+
+        .profile-sidebar {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            text-align: center;
+            position: sticky; 
+            top: 90px;
+        }
+
+        .avatar-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #f8f7f0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .user-badge-lg h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            color: #8C5E2A;
+            margin: 10px 0 5px;
+        }
+
+        .user-badge-lg p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .status-pill {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 6px 16px;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .content-panel {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid #eee;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .panel-header h3 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #333;
+        }
+        .info-grid { display: grid; gap: 20px; }
+        
+        .info-row {
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid #f9f9f9;
+            padding-bottom: 12px;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.05rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .edit-form { display: none; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #333;
+        }
+
+        .styled-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background-color: #fdfdfd;
+            transition: all 0.3s;
+        }
+
+        .styled-input:focus {
+            outline: none;
+            border-color: #8C5E2A;
+            background-color: #fff;
+        }
+
+        .input-error {
+            border-color: #dc3545 !important;
+            background-color: #fff8f8;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+
+        .btn-primary { background-color: #8C5E2A; color: white; }
+        .btn-primary:hover { background-color: #6f4a20; }
+
+        .btn-secondary { background-color: transparent; border: 1px solid #8C5E2A; color: #8C5E2A; }
+        .btn-secondary:hover { background-color: #fcf4e8; }
+
+        .btn-action-container { display: flex; gap: 10px; margin-top: 25px; }
+        .file-upload-box {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        .file-upload-box:hover { border-color: #8C5E2A; background: #fff; }
+        input[type="file"] { display: none; }
+        .footer {
+            background-color: #8C5E2A;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            text-align: left;
+            margin-top: auto;
+        }
+        .footer-content { display: flex; flex-direction: column; align-items: center; }
+        .footer p { margin: 0.2rem 0; font-size: 0.85rem; line-height: 1.4; }
+        .siguenos-redes { display: flex; align-items: center; gap: 2rem; margin-top: 0.5rem; }
+        .instagram-icon { height: 30px; }
+
+        @media (max-width: 800px) {
+            .navbar { height: auto; flex-direction: column; padding: 15px; gap: 10px; }
+            .dashboard-wrapper { grid-template-columns: 1fr; gap: 30px; }
+            .profile-sidebar { position: static; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="flash-messages-container" style="display: none;">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div data-category="{{ category }}" data-message="{{ message }}"></div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logotipo">
+            <span>Fauna y Flora Local Qro</span>
+        </div>
+        <div class="links">
+            <a href="/mapa-usuario">Mapa</a>
+            <a href="/comentarios">Comentarios</a>
+            <a href="/consejos">Consejos</a>
+            <a href="/inicio_usuario">Volver</a>
+            <a href="{{ url_for('auth.logout') }}" style="color: #8C5E2A; font-weight: bold;">Cerrar sesión</a>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <h1>Mi Perfil</h1>
+        <p>Gestiona tu información personal y cuenta</p>
+    </header>
+
+    <div class="dashboard-wrapper">
+        
+        <aside class="profile-sidebar">
+            <div class="avatar-container">
+                <img src="{{ url_for('static', filename='imgperfil/' + (usuario.profile_image or 'default.png')) }}" 
+                     alt="Mi Foto" class="avatar-img">
+            </div>
+            
+            <div class="user-badge-lg">
+                <h2>{{ usuario.nombre }}</h2>
+                <p>{{ usuario.correo }}</p>
+                <span class="status-pill">Miembro de la Comunidad <i class="fas fa-leaf"></i></span>
+            </div>
+        </aside>
+
+        <section class="content-panel">
+            
+            <div id="viewMode">
+                <div class="panel-header">
+                    <h3>Información Personal</h3>
+                    <button class="btn btn-secondary" onclick="toggleForm(true)">
+                        <i class="fas fa-pen"></i> Editar Datos
+                    </button>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-row">
+                        <span class="info-label">Nombre Completo</span>
+                        <span class="info-value">{{ usuario.nombre }} {{ usuario.apellidoPaterno }} {{ usuario.apellidoMaternousuarios }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Correo Electrónico</span>
+                        <span class="info-value">{{ usuario.correo }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Rol</span>
+                        <span class="info-value">Usuario Registrado</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="editMode" class="edit-form">
+                <div class="panel-header">
+                    <h3>Actualizar Datos</h3>
+                </div>
+
+                <form method="POST" action="{{ url_for('perfil.actualizar_perfil') }}" enctype="multipart/form-data" id="formPerfil" novalidate>
+                    
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" name="nombre" id="nombre" value="{{ usuario.nombre }}" maxlength="20" class="styled-input">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Apellido Paterno</label>
+                            <input type="text" name="apellido_paterno" id="apellido_paterno" value="{{ usuario.apellidoPaterno }}" maxlength="20" class="styled-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Apellido Materno</label>
+                            <input type="text" name="apellido_materno" id="apellido_materno" value="{{ usuario.apellidoMaternousuarios}}" maxlength="20" class="styled-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correo Electrónico</label>
+                        <input type="email" name="correo" id="correo" value="{{ usuario.correo }}" maxlength="40" class="styled-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nueva Contraseña (Opcional)</label>
+                        <input type="password" name="contrasena" id="contrasena" placeholder="Dejar en blanco para mantener la actual" class="styled-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Foto de Perfil</label>
+                        <label for="foto_perfil" class="file-upload-box">
+                            <i class="fas fa-camera fa-2x" style="color: #ccc; margin-bottom: 10px;"></i>
+                            <div id="fileName" style="font-size: 0.9rem; color: #666;">
+                                Haz clic para seleccionar imagen
+                            </div>
+                        </label>
+                        <input type="file" name="foto_perfil" id="foto_perfil" accept="image/*" onchange="updateFileName(this)">
+                    </div>
+
+                    <div class="btn-action-container">
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        <button type="button" class="btn btn-secondary" onclick="toggleForm(false)">Cancelar</button>
+                    </div>
+
+                </form>
+            </div>
+
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Flora y Fauna de Querétaro. Todos los derechos reservados.</p>
+            <div class="siguenos-redes">
+                <p class="siguenos" style="margin:0;">Síguenos:</p>
+                <a href="https://www.instagram.com/bio_qro25?igsh=MTdoN2FlZTd1ZnE5bw==" target="_blank">
+                    <img src="{{ url_for('static', filename='img/instagram.png') }}" alt="Instagram" class="instagram-icon">
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mostrar mensajes flash con SweetAlert
+        document.addEventListener("DOMContentLoaded", () => {
+            const flashContainer = document.getElementById('flash-messages-container');
+            if (flashContainer) {
+                const messages = flashContainer.querySelectorAll('div');
+                messages.forEach(msg => {
+                    const category = msg.dataset.category;
+                    const text = msg.dataset.message;
+                    
+                    // Verificar si es un error de validación múltiple
+                    if (text.startsWith('validation_error|')) {
+                        const errores = text.split('|').slice(1); // Remover el prefijo
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Datos incorrectos',
+                            html: errores.join('<br>'),
+                            confirmButtonColor: '#8C5E2A'
+                        });
+                    } else {
+                        // Mensaje simple
+                        Swal.fire({
+                            title: category === 'success' ? '' : 'Error', // CORREGIDO: Título vacío para mensajes de éxito
+                            text: text,
+                            icon: category === 'success' ? 'success' : 'error',
+                            confirmButtonColor: '#8C5E2A'
+                        });
+                    }
+                });
+            }
+        });
+
+        function toggleForm(show) {
+            const viewMode = document.getElementById("viewMode");
+            const editMode = document.getElementById("editMode");
+
+            if (show) {
+                viewMode.style.display = "none";
+                editMode.style.display = "block";
+            } else {
+                viewMode.style.display = "block";
+                editMode.style.display = "none";
+            }
+        }
+
+        function updateFileName(input) {
+            const fileNameDiv = document.getElementById('fileName');
+            if (input.files && input.files.length > 0) {
+                const file = input.files[0];
+                const validExtensions = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif', 'image/webp'];
+                
+                if (!validExtensions.includes(file.type)) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Archivo no válido',
+                        text: 'Por favor selecciona una imagen válida (png, jpg, jpeg, gif, webp)',
+                        confirmButtonColor: '#8C5E2A'
+                    });
+                    input.value = '';
+                    fileNameDiv.textContent = "Haz clic para seleccionar imagen";
+                    fileNameDiv.style.color = "#666";
+                    return;
+                }
+                
+                fileNameDiv.innerHTML = `<strong>Archivo seleccionado:</strong> ${file.name}`;
+                fileNameDiv.style.color = "#8C5E2A";
+            } else {
+                fileNameDiv.textContent = "Haz clic para seleccionar imagen";
+                fileNameDiv.style.color = "#666";
+            }
+        }
+
+        // Validación del formulario antes de enviar
+        document.getElementById('formPerfil').addEventListener('submit', function(e) {
+            const nombre = document.getElementById('nombre');
+            const apPaterno = document.getElementById('apellido_paterno');
+            const apMaterno = document.getElementById('apellido_materno');
+            const correo = document.getElementById('correo');
+            const pass = document.getElementById('contrasena');
+            
+            let errores = [];
+            
+            // Limpiar errores visuales
+            [nombre, apPaterno, apMaterno, correo, pass].forEach(input => input.classList.remove('input-error'));
+
+            // Regex para validaciones
+            const textoRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Validar nombre
+            if (!nombre.value.trim()) {
+                errores.push("El nombre es obligatorio.");
+                nombre.classList.add('input-error');
+            } else if (!textoRegex.test(nombre.value)) {
+                errores.push("El nombre solo debe contener letras.");
+                nombre.classList.add('input-error');
+            }
+
+            // Validar apellido paterno
+            if (!apPaterno.value.trim()) {
+                errores.push("El apellido paterno es obligatorio.");
+                apPaterno.classList.add('input-error');
+            } else if (!textoRegex.test(apPaterno.value)) {
+                errores.push("El apellido paterno solo debe contener letras.");
+                apPaterno.classList.add('input-error');
+            }
+            
+            // Validar apellido materno (opcional, pero si existe debe ser válido)
+            if (apMaterno.value.trim() && !textoRegex.test(apMaterno.value)) {
+                errores.push("El apellido materno solo debe contener letras.");
+                apMaterno.classList.add('input-error');
+            }
+
+            // Validar correo
+            if (!correo.value.trim()) {
+                errores.push("El correo es obligatorio.");
+                correo.classList.add('input-error');
+            } else if (!emailRegex.test(correo.value)) {
+                errores.push("El formato del correo no es válido.");
+                correo.classList.add('input-error');
+            }
+
+            // Validar contraseña solo si se ingresó algo
+            if (pass.value.trim() && pass.value.length < 8) {
+                errores.push("La contraseña debe tener al menos 8 caracteres.");
+                pass.classList.add('input-error');
+            }
+
+            // Si hay errores, mostrar SweetAlert
+            if (errores.length > 0) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Datos incorrectos',
+                    html: errores.join('<br>'),
+                    confirmButtonColor: '#8C5E2A'
+                });
+                return false;
+            }
+
+            // Si todo está bien, mostrar confirmación
+            e.preventDefault();
+            Swal.fire({
+                title: '¿Actualizar perfil?',
+                text: "Se guardarán los cambios realizados",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#8C5E2A',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sí, actualizar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si confirma, enviar el formulario
+                    e.target.submit();
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>
