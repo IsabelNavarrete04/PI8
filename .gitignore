@@ -1,0 +1,23 @@
+# Entorno virtual
+venv/
+.venv/
+
+# Variables de entorno
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Flask
+instance/
+*.log
+
+# MySQL / Workbench
+*.sql
+
+# Sistema
+.DS_Store
+Thumbs.db
